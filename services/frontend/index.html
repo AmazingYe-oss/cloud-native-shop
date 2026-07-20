@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>云原生电商系统</title>
+</head>
+<body>
+    <h1>云原生电商 Demo</h1>
+    <div>
+        <h3>商品列表</h3>
+        <button onclick="loadProducts()">加载商品</button>
+        <ul id="product-list"></ul>
+    </div>
+    <script>
+        const API_BASE = "http://localhost:8003";
+        async function loadProducts() {
+            const res = await fetch("http://localhost:8002/products");
+            const data = await res.json();
+            const list = document.getElementById("product-list");
+            data.data.forEach(p => {
+                const li = document.createElement("li");
+                li.innerText = `${p.name} - ¥${p.price} - 库存${p.stock}`;
+                list.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
