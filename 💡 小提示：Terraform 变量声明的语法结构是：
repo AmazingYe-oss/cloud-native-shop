@@ -1,0 +1,6 @@
+variable "变量名" {
+  type        = 变量类型
+  description = "变量描述"
+  sensitive   = true/false # 只有敏感变量才加这行
+  default     = "默认值" # 有默认值才加这行
+}
