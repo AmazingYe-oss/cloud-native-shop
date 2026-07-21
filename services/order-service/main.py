@@ -6,6 +6,7 @@ from pythonjsonlogger import jsonlogger
 from fastapi import FastAPI, HTTPException
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from starlette.responses import Response
+import os
 
 # 日志配置
 logger = logging.getLogger("order-service")
@@ -30,8 +31,8 @@ REQUEST_LATENCY = Histogram(
 )
 
 # 下游服务地址 - 通过环境变量配置，避免硬编码（云原生十二要素）
-USER_SERVICE_URL = "http://localhost:8001"
-PRODUCT_SERVICE_URL = "http://localhost:8002"
+USER_SERVICE_URL = os.getenv("USER_SERVICE_URL", "http://localhost:8001")
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://localhost:8002")
 
 # 模拟订单存储
 mock_orders = []

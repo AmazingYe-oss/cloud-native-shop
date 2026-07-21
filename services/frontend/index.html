@@ -12,9 +12,8 @@
         <ul id="product-list"></ul>
     </div>
     <script>
-        const API_BASE = "http://localhost:8003";
         async function loadProducts() {
-            const res = await fetch("http://localhost:8002/products");
+            const res = await fetch("/products");
             const data = await res.json();
             const list = document.getElementById("product-list");
             data.data.forEach(p => {

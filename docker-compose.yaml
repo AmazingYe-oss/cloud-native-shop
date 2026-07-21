@@ -1,0 +1,46 @@
+version: '3.8'  
+
+services:        
+  frontend:        
+    build:       
+      context: . 
+      dockerfile: deploy/docker/frontend.Dockerfile 
+    ports:       
+      - "80:80"
+    networks:    
+      - cloud-native
+  
+    restart: always 
+  user-service:
+    build:
+      context: .
+      dockerfile: deploy/docker/user-service.Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - cloud-native
+    restart: always 
+  product-service:
+    build:
+      context: .
+      dockerfile: deploy/docker/product-service.Dockerfile
+    ports:
+      - "8001:8000"
+    networks:
+      - cloud-native   
+    restart: always    
+  order-service:
+    build:
+      context: .
+      dockerfile: deploy/docker/order-service.Dockerfile
+    ports:
+      - "8002:8000"
+    networks:
+      - cloud-native   
+    restart: always      
+
+
+
+networks:  # 定义自定义网络
+  cloud-native:
+    driver: bridge
