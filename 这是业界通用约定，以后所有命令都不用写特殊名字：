@@ -1,0 +1,5 @@
+# 1. 把远程仓库从 cloud-native-infra 重命名为 origin
+git remote rename cloud-native-infra origin
+
+# 2. 第一次推送并设置上游追踪，以后直接写 git push 就能推送
+git push -u origin main
