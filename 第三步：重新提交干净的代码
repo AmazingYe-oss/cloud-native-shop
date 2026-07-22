@@ -1,0 +1,5 @@
+# 1. 只添加干净的文件
+git add provider.tf variables.tf .gitignore oss.tf
+
+# 2. 提交（这是一个全新的干净提交，历史里完全没有密钥）
+git commit -m "feat: 初始化Terraform阿里云Provider、变量声明、OSS状态桶配置"

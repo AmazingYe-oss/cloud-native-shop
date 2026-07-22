@@ -1,0 +1,8 @@
+# 1. 重置到远程仓库的初始状态，所有本地修改都会保留在工作区
+git reset --mixed origin/main
+
+# 2. 把terraform.tfvars从Git缓存里彻底移除（之前不小心被跟踪了）
+git rm --cached terraform.tfvars
+
+# 3. 确认状态，你应该只能看到这4个待提交的文件，绝对不能有terraform.tfvars
+git status
