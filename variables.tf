@@ -12,8 +12,8 @@ variable "alicloud_secret_key" {
 
 variable "alicloud_region" {
   type        = string
-  description = "阿里云地域"
-  default     = "cn-beijing"
+  description = "阿里云地域（默认用上海区）"
+  default     = "cn-shanghai"
 }
 
 variable "alicloud_account_id" {
