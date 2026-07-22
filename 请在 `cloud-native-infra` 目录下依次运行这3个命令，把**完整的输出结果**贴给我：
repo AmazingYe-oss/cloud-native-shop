@@ -1,0 +1,8 @@
+# 1. 查看远程仓库关联配置
+git remote -v
+
+# 2. 查看本地分支名
+git branch
+
+# 3. 尝试推送，看具体报错
+git push origin main
