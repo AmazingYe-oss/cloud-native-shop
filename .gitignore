@@ -38,8 +38,10 @@ secrets/
 *.sqlite
 *.sqlite3
 
+# Terraform 相关
 .terraform/
 *.tfstate
 *.tfstate.backup
-.terraform.lock.hcl
+*.tfvars
+*.auto.tfvars
 .aider*
