@@ -42,3 +42,4 @@ secrets/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+.aider*
