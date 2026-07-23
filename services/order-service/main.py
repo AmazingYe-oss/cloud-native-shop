@@ -22,12 +22,12 @@ logger.addHandler(handler)
 REQUEST_COUNT = Counter(
     "order_service_requests_total",
     "Total number of requests to order service",
-    ["method", "endpoint", "status_code"]
+    ["method", "endpoint", "status_code"],
 )
 REQUEST_LATENCY = Histogram(
     "order_service_request_duration_seconds",
     "Request latency in seconds",
-    ["method", "endpoint"]
+    ["method", "endpoint"],
 )
 
 # 下游服务地址 - 通过环境变量配置，避免硬编码（云原生十二要素）
@@ -39,6 +39,7 @@ mock_orders = []
 
 app = FastAPI(title="Order Service")
 
+
 # 中间件
 @app.middleware("http")
 async def metrics_middleware(request, call_next):
@@ -49,28 +50,34 @@ async def metrics_middleware(request, call_next):
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
-        status_code=response.status_code
+        status_code=response.status_code,
     ).inc()
-    REQUEST_LATENCY.labels(
-        method=request.method,
-        endpoint=request.url.path
-    ).observe(latency)
+    REQUEST_LATENCY.labels(method=request.method, endpoint=request.url.path).observe(
+        latency
+    )
 
     logger.info(
         "request handled",
-        extra={"path": request.url.path, "status_code": response.status_code, "latency": round(latency, 4)}
+        extra={
+            "path": request.url.path,
+            "status_code": response.status_code,
+            "latency": round(latency, 4),
+        },
     )
     return response
+
 
 # 健康检查
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "service": "order-service"}
 
+
 # 指标接口
 @app.get("/metrics")
 async def metrics():
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
 
 # 创建订单 - 核心接口，会调用用户和商品服务
 @app.post("/orders")
@@ -86,7 +93,9 @@ async def create_order(user_id: int, product_id: int, quantity: int = 1):
 
     # 2. 调用商品服务验证商品存在
     try:
-        product_resp = requests.get(f"{PRODUCT_SERVICE_URL}/products/{product_id}", timeout=2)
+        product_resp = requests.get(
+            f"{PRODUCT_SERVICE_URL}/products/{product_id}", timeout=2
+        )
         product_resp.raise_for_status()
         product = product_resp.json()["data"]
     except Exception as e:
@@ -100,11 +109,12 @@ async def create_order(user_id: int, product_id: int, quantity: int = 1):
         "product": product,
         "quantity": quantity,
         "total_price": product["price"] * quantity,
-        "status": "created"
+        "status": "created",
     }
     mock_orders.append(order)
     logger.info(f"订单创建成功: {order['order_id']}")
     return {"code": 0, "data": order}
+
 
 # 查询订单列表
 @app.get("/orders")

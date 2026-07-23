@@ -19,12 +19,12 @@ logger.addHandler(handler)
 REQUEST_COUNT = Counter(
     "product_service_requests_total",
     "Total number of requests to product service",
-    ["method", "endpoint", "status_code"]
+    ["method", "endpoint", "status_code"],
 )
 REQUEST_LATENCY = Histogram(
     "product_service_request_duration_seconds",
     "Request latency in seconds",
-    ["method", "endpoint"]
+    ["method", "endpoint"],
 )
 
 # 模拟商品数据
@@ -36,6 +36,7 @@ mock_products = [
 
 app = FastAPI(title="Product Service")
 
+
 # 中间件
 @app.middleware("http")
 async def metrics_middleware(request, call_next):
@@ -46,33 +47,40 @@ async def metrics_middleware(request, call_next):
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
-        status_code=response.status_code
+        status_code=response.status_code,
     ).inc()
-    REQUEST_LATENCY.labels(
-        method=request.method,
-        endpoint=request.url.path
-    ).observe(latency)
+    REQUEST_LATENCY.labels(method=request.method, endpoint=request.url.path).observe(
+        latency
+    )
 
     logger.info(
         "request handled",
-        extra={"path": request.url.path, "status_code": response.status_code, "latency": round(latency, 4)}
+        extra={
+            "path": request.url.path,
+            "status_code": response.status_code,
+            "latency": round(latency, 4),
+        },
     )
     return response
+
 
 # 健康检查
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "service": "product-service"}
 
+
 # 指标接口
 @app.get("/metrics")
 async def metrics():
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
+
 # 获取所有商品
 @app.get("/products")
 async def get_products():
     return {"code": 0, "data": mock_products}
+
 
 # 根据ID获取商品
 @app.get("/products/{product_id}")

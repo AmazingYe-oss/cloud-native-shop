@@ -19,12 +19,12 @@ logger.addHandler(handler)
 REQUEST_COUNT = Counter(
     "user_service_requests_total",
     "Total number of requests to user service",
-    ["method", "endpoint", "status_code"]
+    ["method", "endpoint", "status_code"],
 )
 REQUEST_LATENCY = Histogram(
     "user_service_request_duration_seconds",
     "Request latency in seconds",
-    ["method", "endpoint"]
+    ["method", "endpoint"],
 )
 
 # ========== 3. 模拟内存数据库 ==========
@@ -38,6 +38,7 @@ mock_users = [
 # ========== 4. FastAPI 应用 ==========
 app = FastAPI(title="User Service")
 
+
 # 中间件：统计请求指标 + 结构化日志
 @app.middleware("http")
 async def metrics_middleware(request, call_next):
@@ -49,12 +50,11 @@ async def metrics_middleware(request, call_next):
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
-        status_code=response.status_code
+        status_code=response.status_code,
     ).inc()
-    REQUEST_LATENCY.labels(
-        method=request.method,
-        endpoint=request.url.path
-    ).observe(latency)
+    REQUEST_LATENCY.labels(method=request.method, endpoint=request.url.path).observe(
+        latency
+    )
 
     # 记录结构化访问日志
     logger.info(
@@ -62,27 +62,32 @@ async def metrics_middleware(request, call_next):
         extra={
             "path": request.url.path,
             "status_code": response.status_code,
-            "latency": round(latency, 4)
-        }
+            "latency": round(latency, 4),
+        },
     )
     return response
 
+
 # ========== 5. 核心接口 ==========
+
 
 # 健康检查接口 - K8s 探针专用
 @app.get("/health", summary="健康检查")
 async def health_check():
     return {"status": "ok", "service": "user-service"}
 
+
 # Prometheus 指标接口
 @app.get("/metrics", summary="Prometheus 指标")
 async def metrics():
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
+
 # 业务接口：获取所有用户
 @app.get("/users", summary="获取用户列表")
 async def get_users():
     return {"code": 0, "data": mock_users}
+
 
 # 业务接口：根据ID获取用户
 @app.get("/users/{user_id}", summary="根据ID获取用户")
