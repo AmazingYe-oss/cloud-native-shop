@@ -1,2 +1,0 @@
-# 用你的远程名字推送，同时设置上游
-git push -u cloud-native-infra main

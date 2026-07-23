@@ -1,8 +1,0 @@
-# 替换成你自己的GitHub仓库地址
-git remote add origin git@github.com:你的用户名/cloud-native-infra.git
-
-# 重命名本地分支为main（如果当前是master的话）
-git branch -M main
-
-# 第一次推送
-git push -u origin main
