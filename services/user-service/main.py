@@ -1,8 +1,9 @@
-import time
 import logging
-from pythonjsonlogger import jsonlogger
+import time
+
 from fastapi import FastAPI, HTTPException
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from pythonjsonlogger import jsonlogger
 from starlette.responses import Response
 
 # ========== 1. 结构化日志配置 ==========

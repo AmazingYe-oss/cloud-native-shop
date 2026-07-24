@@ -1,12 +1,13 @@
+import logging
+import os
 import time
 import uuid
-import logging
+
 import requests
-from pythonjsonlogger import jsonlogger
 from fastapi import FastAPI, HTTPException
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from pythonjsonlogger import jsonlogger
 from starlette.responses import Response
-import os
 
 # 日志配置
 logger = logging.getLogger("order-service")
@@ -88,7 +89,7 @@ async def create_order(user_id: int, product_id: int, quantity: int = 1):
         user_resp.raise_for_status()
         user = user_resp.json()["data"]
     except Exception as e:
-        logger.error(f"调用用户服务失败: {str(e)}")
+        logger.error(f"调用用户服务失败: {e!s}")
         raise HTTPException(status_code=503, detail="用户服务不可用")
 
     # 2. 调用商品服务验证商品存在
@@ -99,7 +100,7 @@ async def create_order(user_id: int, product_id: int, quantity: int = 1):
         product_resp.raise_for_status()
         product = product_resp.json()["data"]
     except Exception as e:
-        logger.error(f"调用商品服务失败: {str(e)}")
+        logger.error(f"调用商品服务失败: {e!s}")
         raise HTTPException(status_code=503, detail="商品服务不可用")
 
     # 3. 生成订单

@@ -1,0 +1,5 @@
+[lint]
+ignore = [
+    "ASYNC210",  # async 函数调用同步 requests（学习项目暂不引入 httpx）
+    "BLE001",    # catch blind Exception（微服务间调用异常统一处理是合理的）
+]
